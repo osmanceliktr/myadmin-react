@@ -19,7 +19,7 @@ import { useDispatch } from 'react-redux'
 import { login } from '../../../store/actions/authActions'
 
 const Login = () => {
-  const [credentials, setCredentials] = useState({ kullaniciadi: '', sifre: '' })
+  const [credentials, setCredentials] = useState({ kullaniciadi: 'osman', sifre: 'Acv455455' })
 
   const dispatch = useDispatch()
   const navigate = useNavigate()
@@ -33,11 +33,14 @@ const Login = () => {
   }
 
   const handleSubmit = (e) => {
-    localStorage.setItem('isAuthenticated', 'true')
-
     e.preventDefault()
-    dispatch(login(credentials))
-    navigate("/")
+    dispatch(login(credentials)).then(() => 
+      {
+      navigate("/");  
+    })
+    .catch(error => {
+        console.error('Login failed', error);
+    });
   }
 
   return (

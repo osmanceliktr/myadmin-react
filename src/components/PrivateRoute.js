@@ -12,7 +12,7 @@ const PrivateRoute = ({ children }) => {
     const checkTokenValidity = async () => {
       try {
         // Access token kontrolü
-        await axios.get('/api/loginUser', {
+        await axios.post('/api/loginUser', {
           headers: { Authorization: `Bearer ${accessToken}` },
         })
       } catch (error) {
@@ -20,7 +20,7 @@ const PrivateRoute = ({ children }) => {
           // Token süresi dolmuş, refresh dene
           try {
             const refreshToken = localStorage.getItem('refreshToken')
-            const response = await axios.post('/api/auth/refresh', { refreshToken })
+            const response = await axios.post('/api/refresh', { refreshToken })
 
             const { accessToken: newAccessToken } = response.data
             localStorage.setItem('accessToken', newAccessToken)

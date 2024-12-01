@@ -51,19 +51,27 @@ switch ($uri) {
             // Gelen JSON verisini çözümle
             $data = json_decode(file_get_contents('php://input'), true);
 
-            // Gelen veriyi kontrol et
             $kullaniciadi = $data['kullaniciadi'] ?? null;
             $sifre = $data['sifre'] ?? null;
 
-            if (!$kullaniciadi || !$sifre) {
-                http_response_code(400); // Bad Request
-                echo json_encode(['success' => false, 'mesaj' => 'Kullanıcı adı veya şifre eksik.']);
-                break;
-            }
+            $controller = new AuthController();
+            echo $controller->login($data);
 
-            // Doğruysa login işlemini başlat
-                $controller = new AuthController();
-                echo $controller->login($data);
+        } else {
+            http_response_code(405); // Method Not Allowed
+            echo json_encode(['success' => false, 'mesaj' => 'Yalnızca POST yöntemi destekleniyor.']);
+        }
+        break;
+    case '/api/refresh':
+        if ($method === 'POST') {
+            // Gelen JSON verisini çözümle
+            $data = json_decode(file_get_contents('php://input'), true);
+
+            $kullaniciadi = $data['kullaniciadi'] ?? null;
+            $sifre = $data['sifre'] ?? null;
+
+            $controller = new AuthController();
+            echo $controller->refresh($data);
 
         } else {
             http_response_code(405); // Method Not Allowed

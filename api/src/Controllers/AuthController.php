@@ -19,7 +19,7 @@ class AuthController {
         $sifre = $request['sifre'] ?? null;
 
         if (!$kullaniciadi || !$sifre) {
-            return json_encode(['error' => 'Username or password is missing'], JSON_PRETTY_PRINT);
+            return json_encode(['success' => false,'error' => 'Kullanıcı adı veya şifre eksik'], JSON_PRETTY_PRINT);
         }
 
         $user = $this->userRepo->findUserByCredentials($kullaniciadi, $sifre);
@@ -34,7 +34,7 @@ class AuthController {
             ]);
         }
 
-        return json_encode(['error' => 'Invalid credentials'], JSON_PRETTY_PRINT);
+        return json_encode(['success' => false,'error' => 'Geçersiz kimlik bilgileri'], JSON_PRETTY_PRINT);
     }
     public function refresh($request)
     {
@@ -48,7 +48,7 @@ class AuthController {
             return json_encode(['accessToken' => $newAccessToken]);
         }
 
-        return json_encode(['error' => 'Invalid or expired refresh token'], JSON_PRETTY_PRINT);
+        return json_encode(['error' => 'Geçersiz veya süresi dolmuş token'], JSON_PRETTY_PRINT);
     }
 
 /*

@@ -3,7 +3,7 @@ import { HashRouter, Route, Routes } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import PrivateRoute from './components/PrivateRoute'
 import { CSpinner, useColorModes } from '@coreui/react'
-import { login, logout } from './store/actions/authActions'
+import { refreshLogin , logout } from './store/actions/authActions'
 
 import './scss/style.scss'
 import './scss/examples.scss'
@@ -23,20 +23,29 @@ const App = () => {
   const dispatch = useDispatch()
 
   useEffect(() => {
-    // localStorage'daki durumu kontrol ederek Redux'a yükle
-    if (localStorage.getItem('isAuthenticated') === 'true') {
-      dispatch(login()) // Redux state'ini güncelle
+    // localStorage'daki accessToken'ı kontrol et
+  const accessToken = localStorage.getItem('accessToken');
+  const refreshToken = localStorage.getItem('refreshToken');
+    
+    // Eğer accessToken varsa, kullanıcı giriş yapmış demektir
+    if (accessToken) {
+      dispatch(refreshLogin()); // Redux state'ini güncelle
+    } else {
+      // Token'lar yoksa logout işlemi yapılır
+      dispatch(logout());
     }
-  }, [dispatch])
+  }, [dispatch]);
 
-  useEffect(() => {
-    const accessToken = localStorage.getItem('accessToken')
-    const refreshToken = localStorage.getItem('refreshToken')
-
-    if (!accessToken && !refreshToken) {
-      dispatch(logout())
-    }
-  }, [dispatch])
+  // useEffect(() => {
+  //   // Token'ların olup olmadığını kontrol et
+  //   const accessToken = localStorage.getItem('accessToken');
+  //   const refreshToken = localStorage.getItem('refreshToken');
+  
+  //   // Eğer accessToken ve refreshToken yoksa, logout işlemini yap
+  //   if (!accessToken || !refreshToken) {
+  //     dispatch(logout()); // Kullanıcıyı çıkış yaptır
+  //   }
+  // }, []);
 
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.href.split('?')[1])
