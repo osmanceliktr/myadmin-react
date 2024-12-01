@@ -2,8 +2,7 @@ import axios from 'axios'
 
 export const login = (credentials) => async (dispatch,getState) => {
   try {
-    console.log(credentials)
-    console.log(credentials)
+
     const response = await axios.post('/api/loginUser', credentials)
     const { accessToken, refreshToken } = response.data
 
