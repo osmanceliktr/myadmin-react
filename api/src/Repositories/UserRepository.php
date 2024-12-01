@@ -58,10 +58,15 @@ class UserRepository {
 	}
     public function findUserByCredentials($kullaniciadi, $sifre)
     {
-        // Şifre kontrolü için hash karşılaştırma
-        $user = User::where('kullaniciadi', $kullaniciadi)->first();
-        if ($user && password_verify($sifre, $user->sifre)) {
-            return $user;
+        $stmt = $this->db->prepare("SELECT * FROM kullanicilar WHERE kullaniciadi = :kullaniciadi");
+        $stmt->bindParam(':kullaniciadi', $kullaniciadi, PDO::PARAM_STR);
+        $stmt->execute();
+
+        $user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        // Kullanıcı bulunduysa şifre doğrulaması
+        if ($user && password_verify($sifre, $user['sifre'])) {
+            return new User($user['id'], $user['kullaniciadi'], $user['adisoyadi'], $user['sifre']);
         }
 
         return null;

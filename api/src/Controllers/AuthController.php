@@ -15,18 +15,19 @@ class AuthController {
     }
     public function login($request)
     {
-        $kullaniciadi = $request['kullaniciadi'];
-        $sifre = $request['sifre'];
+        $kullaniciadi = $request['kullaniciadi'] ?? null;
+        $sifre = $request['sifre'] ?? null;
 
-        // Kullanıcı doğrulama
-        $user = $this->userRepository->findUserByCredentials($kullaniciadi, $sifre);
+        if (!$kullaniciadi || !$sifre) {
+            return json_encode(['error' => 'Username or password is missing'], JSON_PRETTY_PRINT);
+        }
+
+        $user = $this->userRepo->findUserByCredentials($kullaniciadi, $sifre);
 
         if ($user) {
-            // Token oluştur
             $accessToken = $this->jwtService->createAccessToken($user->id);
             $refreshToken = $this->jwtService->createRefreshToken($user->id);
 
-            // Token'ları döndür
             return json_encode([
                 'accessToken' => $accessToken,
                 'refreshToken' => $refreshToken,

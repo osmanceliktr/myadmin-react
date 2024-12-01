@@ -16,7 +16,6 @@ export const login = (credentials) => async (dispatch) => {
     console.error('Login failed:', error)
     dispatch({ type: 'LOGIN_FAILURE' })
   }
-  console.log("222")
 }
 
 export const logout = () => {

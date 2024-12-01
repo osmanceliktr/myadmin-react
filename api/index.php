@@ -2,6 +2,7 @@
 
 // 1. Gerekli dosyaların yüklenmesi
 require_once __DIR__ . '/autoload.php';
+require_once 'vendor/autoload.php';
 
 use Src\Controllers\AdminController;
 use Src\Controllers\AuthController;
@@ -47,18 +48,23 @@ switch ($uri) {
         break;
     case '/api/loginUser':
         if ($method === 'POST') {
-			$data = json_decode(file_get_contents('php://input'), true);
+            // Gelen JSON verisini çözümle
+            $data = json_decode(file_get_contents('php://input'), true);
+
+            // Gelen veriyi kontrol et
             $kullaniciadi = $data['kullaniciadi'] ?? null;
             $sifre = $data['sifre'] ?? null;
 
-			
-            if ($kullaniciadi) {
-                $controller = new AuthController();
-                echo $controller->login($kullaniciadi,$sifre);
-            } else {
+            if (!$kullaniciadi || !$sifre) {
                 http_response_code(400); // Bad Request
-                echo json_encode(['success' => false, 'mesaj' => 'Admin ID belirtilmedi.']);
+                echo json_encode(['success' => false, 'mesaj' => 'Kullanıcı adı veya şifre eksik.']);
+                break;
             }
+
+            // Doğruysa login işlemini başlat
+                $controller = new AuthController();
+                echo $controller->login($data);
+
         } else {
             http_response_code(405); // Method Not Allowed
             echo json_encode(['success' => false, 'mesaj' => 'Yalnızca POST yöntemi destekleniyor.']);

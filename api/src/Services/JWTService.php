@@ -15,12 +15,12 @@ class JWTService
     {
         $configPath = dirname(__DIR__, 2) . '/config/jwt.php';
         if (!file_exists($configPath)) {
-            throw new Exception("JWT config file not found at $configPath");
+            echo "JWT config file not found at $configPath";
         }
         
         $config = include($configPath);
         if (!is_array($config)) {
-            throw new Exception("JWT config file must return an array.");
+            echo ("JWT config file must return an array.");
         }
         
         $this->secretKey = $config['secret_key'];
