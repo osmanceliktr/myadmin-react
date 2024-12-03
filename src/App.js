@@ -36,17 +36,6 @@ const App = () => {
     }
   }, [dispatch]);
 
-  // useEffect(() => {
-  //   // Token'ların olup olmadığını kontrol et
-  //   const accessToken = localStorage.getItem('accessToken');
-  //   const refreshToken = localStorage.getItem('refreshToken');
-  
-  //   // Eğer accessToken ve refreshToken yoksa, logout işlemini yap
-  //   if (!accessToken || !refreshToken) {
-  //     dispatch(logout()); // Kullanıcıyı çıkış yaptır
-  //   }
-  // }, []);
-
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.href.split('?')[1])
     const theme = urlParams.get('theme') && urlParams.get('theme').match(/^[A-Za-z0-9\s]+/)[0]
@@ -74,7 +63,7 @@ const App = () => {
           <Route exact path="/login" name="Login Page" element={<Login />} />
           <Route exact path="/404" name="Page 404" element={<Page404 />} />
           <Route exact path="/500" name="Page 500" element={<Page500 />} />
-          <Route path="*" name="Home" element={
+          <Route path="*" name="Default" element={
             <PrivateRoute>
                 <DefaultLayout/>
               </PrivateRoute>
