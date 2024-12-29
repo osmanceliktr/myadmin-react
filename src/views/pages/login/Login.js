@@ -19,7 +19,7 @@ import { useDispatch } from 'react-redux'
 import { login } from '../../../store/actions/authActions'
 
 const Login = () => {
-  const [credentials, setCredentials] = useState({ kullaniciadi: 'osman', sifre: 'Acv455455' })
+  const [credentials, setCredentials] = useState({ kullaniciadi: '', sifre: '' })
 
   const dispatch = useDispatch()
   const navigate = useNavigate()
