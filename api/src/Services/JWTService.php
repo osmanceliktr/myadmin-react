@@ -53,7 +53,17 @@ class JWTService
 
         return JWT::encode($payload, $this->secretKey, 'HS256');
     }
-
+    public function invalidateRefreshToken($refreshToken) 
+    {
+        try {
+            $decoded = JWT::decode($refreshToken, new Key($this->secretKey, 'HS256'));
+            // Token geçerliyse true döndür
+            return true;
+        } catch (\Exception $e) {
+            // Token geçersizse false döndür
+            return false;
+        }
+    }
     public function decodeToken($token)
     {
         try {

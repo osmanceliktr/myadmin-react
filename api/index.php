@@ -1,4 +1,16 @@
 <?php
+header("Access-Control-Allow-Origin: http://localhost:3000");
+header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
+header("Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With");
+header("Access-Control-Allow-Credentials: true");
+
+// OPTIONS istekleri için özel işlem - preflight istekleri için gerekli
+if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+    http_response_code(200);
+    exit;
+}
+
+header("Content-Type: application/json; charset=UTF-8");
 
 // 1. Gerekli dosyaların yüklenmesi
 require_once __DIR__ . '/autoload.php';
@@ -8,8 +20,6 @@ use Src\Controllers\AdminController;
 use Src\Controllers\AuthController;
 
 // 2. Genel yapılandırmalar
-header("Access-Control-Allow-Origin: *");
-header("Content-Type: application/json");
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
@@ -51,8 +61,8 @@ switch ($uri) {
             // Gelen JSON verisini çözümle
             $data = json_decode(file_get_contents('php://input'), true);
 
-            $kullaniciadi = $data['kullaniciadi'] ?? null;
-            $sifre = $data['sifre'] ?? null;
+            $username = $data['username'] ?? null;
+            $password = $data['password'] ?? null;
 
             $controller = new AuthController();
             echo $controller->login($data);
@@ -62,13 +72,26 @@ switch ($uri) {
             echo json_encode(['success' => false, 'mesaj' => 'Yalnızca POST yöntemi destekleniyor.']);
         }
         break;
+        case '/api/logout':
+            if ($method === 'POST') {
+                // Gelen JSON verisini çözümle
+                $data = json_decode(file_get_contents('php://input'), true);
+                $refreshToken = $data['refreshToken'] ?? null;
+    
+                $controller = new AuthController();
+                echo $controller->logout($refreshToken);
+            } else {
+                http_response_code(405); // Method Not Allowed
+                echo json_encode(['success' => false, 'mesaj' => 'Yalnızca POST yöntemi destekleniyor.']);
+            }
+            break;
     case '/api/refresh':
         if ($method === 'POST') {
             // Gelen JSON verisini çözümle
             $data = json_decode(file_get_contents('php://input'), true);
 
-            $kullaniciadi = $data['kullaniciadi'] ?? null;
-            $sifre = $data['sifre'] ?? null;
+            $username = $data['username'] ?? null;
+            $password = $data['password'] ?? null;
 
             $controller = new AuthController();
             echo $controller->refresh($data);

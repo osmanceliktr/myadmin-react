@@ -19,7 +19,7 @@ import { useDispatch } from 'react-redux'
 import { login } from '../../../store/actions/authActions'
 
 const Login = () => {
-  const [credentials, setCredentials] = useState({ kullaniciadi: '', sifre: '' })
+  const [credentials, setCredentials] = useState({ username: '', password: '' })
 
   const dispatch = useDispatch()
   const navigate = useNavigate()
@@ -59,9 +59,9 @@ const Login = () => {
                       </CInputGroupText>
                       <CFormInput
                         placeholder="Kullanıcı adı"
-                        autoComplete="kullaniciadi"
-                        name='kullaniciadi'
-                        value={credentials.kullaniciadi}
+                        autoComplete="username"
+                        name='username'
+                        value={credentials.username}
                         onChange={handleChange}
                       />
                     </CInputGroup>
@@ -73,8 +73,8 @@ const Login = () => {
                         type="password"
                         placeholder="Şifre"
                         autoComplete="current-password"
-                        name='sifre'
-                        value={credentials.sifre}
+                        name='password'
+                        value={credentials.password}
                         onChange={handleChange}
                       />
                     </CInputGroup>

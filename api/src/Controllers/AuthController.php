@@ -15,14 +15,14 @@ class AuthController {
     }
     public function login($request)
     {
-        $kullaniciadi = $request['kullaniciadi'] ?? null;
-        $sifre = $request['sifre'] ?? null;
+        $username = $request['username'] ?? null;
+        $password = $request['password'] ?? null;
 
-        if (!$kullaniciadi || !$sifre) {
+        if (!$username || !$password) {
             return json_encode(['success' => false,'error' => 'Kullanıcı adı veya şifre eksik'], JSON_PRETTY_PRINT);
         }
 
-        $user = $this->userRepo->findUserByCredentials($kullaniciadi, $sifre);
+        $user = $this->userRepo->findUserByCredentials($username, $password);
 
         if ($user) {
             $accessToken = $this->jwtService->createAccessToken($user->id);
@@ -33,9 +33,22 @@ class AuthController {
                 'refreshToken' => $refreshToken,
             ]);
         }
+        $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
 
-        return json_encode(['success' => false,'error' => 'Geçersiz kimlik bilgileri'], JSON_PRETTY_PRINT);
+
+        return json_encode(['success' => false,'error' => 'Kullanıcı adı veya şifre hatalı','pass'=>$hashedPassword], JSON_PRETTY_PRINT);
     }
+    public function logout($refreshToken) 
+{
+    // RefreshToken'ı veritabanında geçersiz kıl
+    $result = $this->jwtService->invalidateRefreshToken($refreshToken);
+    
+    if ($result) {
+        return json_encode(['success' => true, 'mesaj' => 'Başarıyla çıkış yapıldı']);
+    } else {
+        return json_encode(['success' => false, 'mesaj' => 'Çıkış yapılırken bir hata oluştu']);
+    }
+}
     public function refresh($request)
     {
         $refreshToken = $request['refreshToken'];
@@ -52,22 +65,18 @@ class AuthController {
     }
 
 /*
-    public function login($kullaniciadi, $sifre) {
-        $user = $this->userRepo->getByUser($kullaniciadi);
-        //$hashedPassword = password_hash($sifre, PASSWORD_BCRYPT);
-        if ($user && password_verify($sifre, $user->sifre)) {
+    public function login($username, $password) {
+        $user = $this->userRepo->getByUser($username);
+        //$hashedPassword = password_hash($password, PASSWORD_BCRYPT);
+        if ($user && password_verify($password, $user->password)) {
             $_SESSION['user_id'] = $user->id; // Kullanıcı ID'sini oturuma ekle
-            $_SESSION['kullaniciadi'] = $user->kullaniciadi;
+            $_SESSION['username'] = $user->username;
             return json_encode(['success' => true, 'message' => 'Giriş başarılı.','user'=>$user]);
         }
         return json_encode(['success' => false,'message' => 'Kullanıcı adı veya şifre hatalı.']);
     }
 */
-    public function logout() {
-        session_unset(); // Tüm oturum verilerini temizle
-        session_destroy(); // Oturumu sonlandır
-        return json_encode(['success' => true, 'message' => 'Çıkış başarılı.']);
-    }
+
 
     public function isAuthenticated() {
         if (isset($_SESSION['user_id'])) {

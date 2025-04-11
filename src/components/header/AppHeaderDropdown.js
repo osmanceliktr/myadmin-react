@@ -26,7 +26,6 @@ const AppHeaderDropdown = () => {
   const navigate = useNavigate() 
 
   const handleLogout = () => {
-    localStorage.setItem('isAuthenticated', 'false')
     dispatch(logout()) // localStorage ve Redux temizlenecek
     navigate('/login')
   }

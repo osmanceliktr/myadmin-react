@@ -4,14 +4,14 @@ namespace Src\Models;
 
 class User {
     public int $id;
-    public string $kullaniciadi;
-    public string $adisoyadi;
-    public string $sifre;
+    public string $username;
+    public string $nameSurname;
+    public string $password;
 
-    public function __construct($id, $kullaniciadi, $adisoyadi, $sifre) {
+    public function __construct($id, $username, $nameSurname, $password) {
         $this->id = $id;
-        $this->kullaniciadi = $kullaniciadi;
-        $this->adisoyadi = $adisoyadi;
-        $this->sifre = $sifre;
+        $this->username = $username;
+        $this->nameSurname = $nameSurname;
+        $this->password = $password;
     }
 }

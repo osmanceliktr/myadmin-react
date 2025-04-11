@@ -3,7 +3,7 @@ import axios from 'axios'
 export const login = (credentials) => async (dispatch,getState) => {
   try {
 
-    const response = await axios.post('/api/loginUser', credentials)
+    const response = await axios.post('http://localhost:5000/api/loginUser', credentials)
     const { accessToken, refreshToken } = response.data
 
     // Token'ları localStorage'e kaydet
@@ -23,7 +23,7 @@ export const refreshLogin = () => async (dispatch) => {
     const refreshToken = localStorage.getItem('refreshToken');
     if (!refreshToken) throw new Error('Refresh token bulunamadı');
 
-    const response = await axios.post('/api/refresh', { refreshToken });
+    const response = await axios.post('http://localhost:5000/api/refresh', { refreshToken });
     const { accessToken } = response.data;
 
     // Yeni token'ları localStorage'a kaydet
@@ -37,10 +37,20 @@ export const refreshLogin = () => async (dispatch) => {
     dispatch({ type: 'LOGIN_FAILURE' });
   }
 };
-export const logout = () => {
-  // Token'ları temizle
-  localStorage.removeItem('accessToken')
-  localStorage.removeItem('refreshToken')
-  
-  return { type: 'LOGOUT' }
-}
+export const logout = () => async (dispatch) => {
+  try {
+    const refreshToken = localStorage.getItem('refreshToken');
+    if (refreshToken) {
+      // Backend'e çıkış isteği gönder
+      await axios.post('http://localhost:5000/api/logout', { refreshToken });
+    }
+  } catch (error) {
+    console.error('Logout error:', error);
+  } finally {
+    // Her durumda token'ları temizle
+    localStorage.removeItem('accessToken');
+    localStorage.removeItem('refreshToken');
+    
+    dispatch({ type: 'LOGOUT' });
+  }
+};
