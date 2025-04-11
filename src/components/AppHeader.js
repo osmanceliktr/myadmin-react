@@ -49,7 +49,7 @@ const AppHeader = () => {
         </CHeaderToggler>
         <CHeaderNav className="d-none d-md-flex">
           <CNavItem>
-            <CNavLink to="/kuran/okuma" as={NavLink}>
+            <CNavLink to="/home/index" as={NavLink}>
             Osman Kitaplık
             </CNavLink>
           </CNavItem>

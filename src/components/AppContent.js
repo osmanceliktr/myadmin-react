@@ -23,7 +23,7 @@ const AppContent = () => {
               )
             )
           })}
-          <Route path="/" element={<Navigate to="kuran/okuma" replace />} />
+          <Route path="/" element={<Navigate to="home/index" replace />} />
         </Routes>
       </Suspense>
     </CContainer>

@@ -1,10 +1,10 @@
 import React from 'react'
 
-const KuranPages = React.lazy(() => import('./views/kuran/KuranPages'))
+const IndexPages = React.lazy(() => import('./views/pages/home/IndexPages'))
 
 const routes =[
     { path:'/', exact: true, name: 'Default'},
-    { path: '/kuran/okuma', name: 'Kuran', element: KuranPages },
+    { path: '/home/index', name: 'IndexPages', element: IndexPages },
 ]
 
 export default routes

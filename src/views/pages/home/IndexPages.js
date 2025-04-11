@@ -9,7 +9,7 @@ import {
 } from '@coreui/react'
 
 
-const KuranPages = () => {
+const IndexPages = () => {
   return (
     <>
       <CRow>
@@ -27,4 +27,4 @@ const KuranPages = () => {
   )
 }
 
-export default KuranPages
+export default IndexPages
